@@ -17,27 +17,17 @@ server {
 	error_log /sites/wordpress.caojietest.com/logs/error.log;
 
 	# Default server block rules
-	include global/server/defaults.conf;
+	# include global/server/defaults.conf;
 
 	location / {
 		try_files $uri $uri/ /index.php?$args;
 	}
 
 	location ~ \.php$ {
-		try_files $uri =404;
-		include global/fastcgi-params.conf;
-
-		# Use the php pool defined in the upstream variable.
-		# See global/php-pool.conf for definition.
-		fastcgi_pass   $upstream;
-	}
-}
-
-# Redirect www to non-www
-server {
-	listen 80;
-	listen [::]:80;
-	server_name www.wordpress.caojietest.com;
-
-	return 301 $scheme://wordpress.caojietest.com$request_uri;
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi.conf;
+    }
 }
