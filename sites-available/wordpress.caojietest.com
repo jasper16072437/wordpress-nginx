@@ -1,29 +1,32 @@
 server {
-	# Ports to listen on
-	listen 80;
-	listen [::]:80;
+        # Ports to listen on
+        listen 443 ssl;
+        listen [::]:443 ssl;
 
-	# Server name to listen for
-	server_name wordpress.caojietest.com;
+        # Server name to listen for
+        server_name wordpress.caojietest.com;
 
-	# Path to document root
-	root /sites/wordpress.caojietest.com/public;
+        # Path to document root
+        root /sites/azurefile/wordpress.caojietest.com/public;
 
-	# File to be used as index
-	index index.php;
+        # File to be used as index
+        index index.php;
 
-	# Overrides logs defined in nginx.conf, allows per site logs.
-	access_log /sites/wordpress.caojietest.com/logs/access.log;
-	error_log /sites/wordpress.caojietest.com/logs/error.log;
+        ssl_certificate /sites/azurefile/wordpress.caojietest.com/ssl/certificate.crt;
+        ssl_certificate_key /sites/azurefile/wordpress.caojietest.com/ssl/private.key;
 
-	# Default server block rules
-	# include global/server/defaults.conf;
+        # Overrides logs defined in nginx.conf, allows per site logs.
+        access_log /sites/azurefile/wordpress.caojietest.com/logs/access.log;
+        error_log /sites/azurefile/wordpress.caojietest.com/logs/error.log;
 
-	location / {
-		try_files $uri $uri/ /index.php?$args;
-	}
+        # Default server block rules
+        # include global/server/defaults.conf;
 
-	location ~ \.php$ {
+        location / {
+                try_files $uri $uri/ /index.php?$args;
+        }
+
+        location ~ \.php$ {
         try_files $uri =404;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass unix:/run/php/php8.3-fpm.sock;
